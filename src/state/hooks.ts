@@ -19,7 +19,17 @@ import {
   clear as clearToast,
   setBlock,
 } from './actions'
-import { State, Farm, Pool, BlockState, ProfileState, TeamsState, AchievementState, PriceState } from './types'
+import {
+  State,
+  Farm,
+  Pool,
+  BlockState,
+  ProfileState,
+  TeamsState,
+  AchievementState,
+  PriceState,
+  RoundData,
+} from './types'
 import { fetchProfile } from './profile'
 import { fetchTeam, fetchTeams } from './teams'
 import { fetchAchievements } from './achievements'
@@ -232,7 +242,8 @@ export const useBlock = () => {
 
 export const useInitialBlock = () => {
   return useSelector((state: State) => state.block.initialBlock)
-  
+}
+
 // Predictions
 export const useInitializePredictions = () => {
   const dispatch = useDispatch()
@@ -245,8 +256,13 @@ export const useInitializePredictions = () => {
 export const useGetRounds = () => {
   const rounds = useSelector((state: State) => state.predictions.rounds)
 
-  return useMemo(() => {
-    return Object.values(rounds).map(transformRoundResponse)
+  return useMemo<RoundData>(() => {
+    return Object.keys(rounds).reduce((accum, epoch) => {
+      return {
+        ...accum,
+        [epoch]: transformRoundResponse(rounds[epoch]),
+      }
+    }, {})
   }, [rounds])
 }
 
@@ -257,4 +273,14 @@ export const useGetCurrentEpoch = () => {
 export const useGetLiveRound = () => {
   const { currentEpoch, rounds } = useSelector((state: State) => state.predictions)
   return rounds[currentEpoch]
+}
+
+export const useGetPredictionsStatus = () => {
+  return useSelector((state: State) => state.predictions.status)
+}
+
+export const useGetCurrentRound = () => {
+  const currentEpoch = useGetCurrentEpoch()
+  const roundData = useSelector((state: State) => state.predictions.rounds)
+  return roundData[currentEpoch]
 }
