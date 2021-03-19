@@ -198,6 +198,7 @@ export interface PredictionsState {
   currentEpoch: number
   isLoading: boolean
   isHistoryPaneOpen: boolean
+  isChartPaneOpen: boolean
   rounds: {
     [key: string]: RoundResponse
   }
