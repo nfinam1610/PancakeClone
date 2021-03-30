@@ -258,6 +258,16 @@ export const useGetIntervalBlocks = () => {
   return useSelector((state: State) => state.predictions.intervalBlocks)
 }
 
+export const useGetBufferBlocks = () => {
+  return useSelector((state: State) => state.predictions.bufferBlocks)
+}
+
+export const useGetTotalIntervalBlocks = () => {
+  const intervalBlocks = useGetIntervalBlocks()
+  const bufferBlocks = useGetBufferBlocks()
+  return intervalBlocks + bufferBlocks / 2
+}
+
 export const useGetRound = (id: string) => {
   const rounds = useGetRounds()
   return rounds[id]
@@ -271,4 +281,8 @@ export const useGetCurrentRound = () => {
 
 export const useGetPredictionsStatus = () => {
   return useSelector((state: State) => state.predictions.status)
+}
+
+export const useGetCurrentRoundBlockNumber = () => {
+  return useSelector((state: State) => state.predictions.currentRoundStartBlockNumber)
 }

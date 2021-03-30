@@ -185,7 +185,9 @@ export interface PredictionsState {
   isHistoryPaneOpen: boolean
   isChartPaneOpen: boolean
   currentEpoch: number
+  currentRoundStartBlockNumber: number
   intervalBlocks: number
+  bufferBlocks: number
   minBetAmount: string
   rounds: RoundData
 }
