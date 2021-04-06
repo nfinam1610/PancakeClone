@@ -309,3 +309,8 @@ export const useGetIsFetchingHistory = () => {
 export const useGetBets = () => {
   return useSelector((state: State) => state.predictions.bets)
 }
+
+export const useGetBetByRoundId = (roundId: string) => {
+  const bets = useGetBets()
+  return bets.find((bet) => bet.round.id === roundId)
+}
