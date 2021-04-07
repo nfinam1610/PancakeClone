@@ -283,6 +283,10 @@ export const useGetPredictionsStatus = () => {
   return useSelector((state: State) => state.predictions.status)
 }
 
+export const useGetHistoryFilter = () => {
+  return useSelector((state: State) => state.predictions.historyFilter)
+}
+
 export const useGetCurrentRoundBlockNumber = () => {
   return useSelector((state: State) => state.predictions.currentRoundStartBlockNumber)
 }
@@ -310,7 +314,12 @@ export const useGetBets = () => {
   return useSelector((state: State) => state.predictions.bets)
 }
 
-export const useGetBetByRoundId = (roundId: string) => {
+export const useGetBetsByAccount = (account: string) => {
   const bets = useGetBets()
-  return bets.find((bet) => bet.round.id === roundId)
+  return bets ? bets[account] : []
+}
+
+export const useGetBetByRoundId = (roundId: string, account: string) => {
+  const accountBets = useGetBetsByAccount(account)
+  return accountBets.find((bet) => bet.round.id === roundId)
 }

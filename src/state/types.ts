@@ -151,6 +151,7 @@ export interface BlockState {
 export enum BetPosition {
   BULL = 'Bull',
   BEAR = 'Bear',
+  HOUSE = 'House',
 }
 
 export enum PredictionStatus {
@@ -173,6 +174,7 @@ export interface Round {
   bullBets: number
   bearAmount: number
   bullAmount: number
+  position: BetPosition
   bets?: Bet[]
 }
 
@@ -198,19 +200,30 @@ export interface RoundData {
   [key: string]: Round
 }
 
+export interface BetData {
+  [key: string]: Bet[]
+}
+
+export enum HistoryFilter {
+  ALL = 'all',
+  COLLECTED = 'collected',
+  UNCOLLECTED = 'uncollected',
+}
+
 export interface PredictionsState {
   status: PredictionStatus
   isLoading: boolean
   isHistoryPaneOpen: boolean
   isChartPaneOpen: boolean
   isFetchingHistory: boolean
+  historyFilter: HistoryFilter
   currentEpoch: number
   currentRoundStartBlockNumber: number
   intervalBlocks: number
   bufferBlocks: number
   minBetAmount: string
   rounds: RoundData
-  bets: Bet[]
+  bets: BetData
 }
 
 // Global state
