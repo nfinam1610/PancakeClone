@@ -265,7 +265,7 @@ export const useGetBufferBlocks = () => {
 export const useGetTotalIntervalBlocks = () => {
   const intervalBlocks = useGetIntervalBlocks()
   const bufferBlocks = useGetBufferBlocks()
-  return intervalBlocks + bufferBlocks / 2
+  return intervalBlocks + bufferBlocks
 }
 
 export const useGetRound = (id: string) => {
