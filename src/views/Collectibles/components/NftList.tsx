@@ -13,21 +13,21 @@ import EasterNftCard from './NftCard/EasterNftCard'
  *
  */
 const nftComponents = {
-  10: BunnySpeciaCard,
-  11: BunnySpeciaCard,
-  12: EasterNftCard,
-  13: EasterNftCard,
-  14: EasterNftCard,
+  hiccup: BunnySpeciaCard,
+  bullish: BunnySpeciaCard,
+  'easter-storm': EasterNftCard,
+  'easter-flipper': EasterNftCard,
+  'easter-caker': EasterNftCard,
 }
 
 const NftList = () => {
-  const { nfts: nftTokenIds, refresh, lastUpdated } = useGetWalletNfts()
+  const { refresh, lastUpdated, getTokenIdsByIdentifier } = useGetWalletNfts()
 
   return (
     <NftGrid>
       {orderBy(nfts, 'sortOrder').map((nft) => {
-        const tokenIds = nftTokenIds[nft.bunnyId] ? nftTokenIds[nft.bunnyId].tokenIds : []
-        const Card = nftComponents[nft.bunnyId] || NftCard
+        const tokenIds = getTokenIdsByIdentifier(nft.identifier)
+        const Card = nftComponents[nft.identifier] ?? NftCard
 
         return (
           <div key={nft.name}>
