@@ -146,15 +146,98 @@ export interface BlockState {
   initialBlock: number
 }
 
+// Predictions
+
+export enum BetPosition {
+  BULL = 'Bull',
+  BEAR = 'Bear',
+  HOUSE = 'House',
+}
+
+export enum PredictionStatus {
+  INITIAL = 'initial',
+  LIVE = 'live',
+  PAUSED = 'paused',
+  ERROR = 'error',
+}
+
+export interface Round {
+  id: string
+  epoch: number
+  startBlock: number
+  startAt: number
+  lockAt: number | null
+  lockBlock: number | null
+  lockPrice: number | null
+  endBlock: number | null
+  closePrice: number | null
+  totalBets: number
+  totalAmount: number
+  bullBets: number
+  bearAmount: number
+  bullAmount: number
+  position: BetPosition
+  bets?: Bet[]
+}
+
+export interface Bet {
+  id: string
+  hash: string
+  amount: number
+  position: BetPosition
+  claimed: boolean
+  user: PredictionUser
+  round: Round
+}
+
+export interface PredictionUser {
+  id: string
+  address: string
+  block: number
+  totalBets: number
+  totalBNB: number
+}
+
+export interface RoundData {
+  [key: string]: Round
+}
+
+export interface BetData {
+  [key: string]: Bet[]
+}
+
+export enum HistoryFilter {
+  ALL = 'all',
+  COLLECTED = 'collected',
+  UNCOLLECTED = 'uncollected',
+}
+
+export interface PredictionsState {
+  status: PredictionStatus
+  isLoading: boolean
+  isHistoryPaneOpen: boolean
+  isChartPaneOpen: boolean
+  isFetchingHistory: boolean
+  historyFilter: HistoryFilter
+  currentEpoch: number
+  currentRoundStartBlockNumber: number
+  intervalBlocks: number
+  bufferBlocks: number
+  minBetAmount: string
+  rounds: RoundData
+  history: BetData
+}
+
 // Global state
 
 export interface State {
-  farms: FarmsState
-  toasts: ToastsState
-  prices: PriceState
-  pools: PoolsState
-  profile: ProfileState
-  teams: TeamsState
   achievements: AchievementState
   block: BlockState
+  farms: FarmsState
+  prices: PriceState
+  pools: PoolsState
+  predictions: PredictionsState
+  profile: ProfileState
+  teams: TeamsState
+  toasts: ToastsState
 }

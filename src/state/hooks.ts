@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react'
 import BigNumber from 'bignumber.js'
-import { kebabCase } from 'lodash'
+import { kebabCase, orderBy } from 'lodash'
 import { useWeb3React } from '@web3-react/core'
 import { Toast, toastTypes } from '@pancakeswap-libs/uikit'
 import { useSelector } from 'react-redux'
@@ -19,7 +19,7 @@ import {
   clear as clearToast,
   setBlock,
 } from './actions'
-import { State, Farm, Pool, ProfileState, TeamsState, AchievementState, PriceState } from './types'
+import { State, Farm, Pool, ProfileState, TeamsState, AchievementState, PriceState, Bet } from './types'
 import { fetchProfile } from './profile'
 import { fetchTeam, fetchTeams } from './teams'
 import { fetchAchievements } from './achievements'
@@ -230,4 +230,91 @@ export const useBlock = () => {
 
 export const useInitialBlock = () => {
   return useSelector((state: State) => state.block.initialBlock)
+}
+
+// Predictions
+export const useIsHistoryPaneOpen = () => {
+  return useSelector((state: State) => state.predictions.isHistoryPaneOpen)
+}
+
+export const useIsChartPaneOpen = () => {
+  return useSelector((state: State) => state.predictions.isChartPaneOpen)
+}
+
+export const useGetRounds = () => {
+  return useSelector((state: State) => state.predictions.rounds)
+}
+
+export const useGetSortedRounds = () => {
+  const roundData = useGetRounds()
+  return orderBy(Object.values(roundData), ['epoch'], ['asc'])
+}
+
+export const useGetCurrentEpoch = () => {
+  return useSelector((state: State) => state.predictions.currentEpoch)
+}
+
+export const useGetIntervalBlocks = () => {
+  return useSelector((state: State) => state.predictions.intervalBlocks)
+}
+
+export const useGetBufferBlocks = () => {
+  return useSelector((state: State) => state.predictions.bufferBlocks)
+}
+
+export const useGetTotalIntervalBlocks = () => {
+  const intervalBlocks = useGetIntervalBlocks()
+  const bufferBlocks = useGetBufferBlocks()
+  return intervalBlocks + bufferBlocks
+}
+
+export const useGetRound = (id: string) => {
+  const rounds = useGetRounds()
+  return rounds[id]
+}
+
+export const useGetCurrentRound = () => {
+  const currentEpoch = useGetCurrentEpoch()
+  const rounds = useGetSortedRounds()
+  return rounds.find((round) => round.epoch === currentEpoch)
+}
+
+export const useGetPredictionsStatus = () => {
+  return useSelector((state: State) => state.predictions.status)
+}
+
+export const useGetHistoryFilter = () => {
+  return useSelector((state: State) => state.predictions.historyFilter)
+}
+
+export const useGetCurrentRoundBlockNumber = () => {
+  return useSelector((state: State) => state.predictions.currentRoundStartBlockNumber)
+}
+
+export const useGetMinBetAmount = () => {
+  const minBetAmount = useSelector((state: State) => state.predictions.minBetAmount)
+  return useMemo(() => new BigNumber(minBetAmount), [minBetAmount])
+}
+
+export const useGetUserBetByRound = (id: string, account: string): Bet => {
+  const round = useGetRound(id)
+
+  if (!account) {
+    return undefined
+  }
+
+  return round.bets.find((bet) => bet.user.address.toLowerCase() === account.toLocaleLowerCase())
+}
+
+export const useGetIsFetchingHistory = () => {
+  return useSelector((state: State) => state.predictions.isFetchingHistory)
+}
+
+export const useGetHistory = () => {
+  return useSelector((state: State) => state.predictions.history)
+}
+
+export const useGetHistoryByAccount = (account: string) => {
+  const bets = useGetHistory()
+  return bets ? bets[account] : []
 }
